@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Recognition Software</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #upload-container {
+      background-color: #f1f1f1;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+      margin: 20px auto;
+      text-align: center;
+      width: 50%; /* Adjust as needed */
+    }
+    #upload-button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #camera-button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #capture-button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #image-container {
+    width: 300px; /* Adjust width as needed */
+    height: 200px; /* Adjust height as needed */
+    background-image: url('assets/default.jpg'); /* Default image URL */
+    background-size: cover; /* Ensure the image covers the entire container */
+    background-position: center; /* Center the image */
+}
+    #image-preview {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    #predicted-class {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    #video-container {
+      margin: 20px auto;
+      width: 50%;
+      display: none; /* Hide initially */
+    }
+    #camera-stream {
+      width: 100%;
+    }
+
+    body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000000; /* slight grey background */
+            display: flex;
+            justify-content: center; /* center horizontally */
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%; /* reduced width */
+            max-width: 1200px; /* maximum width */
+            position: fixed;
+            top: 3rem; /* margin from top */
+            margin-top: 0.0rem; /* margin from top */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .navbar-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar-links a {
+            color: #333;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-links a:hover {
+            background-color: #eee;
+        }
+
+        .login-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+        }
+      .fatherContainer {
+    border-radius: 30px;
+    background: #e4d9ff;
+    box-shadow:  35px 35px 70px #41417a,
+             -35px -35px 70px #5959a4;
+    padding: 20px;
+    margin-top: 160px; /* Adjusted margin-top to match the height of the navbar */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+  </style>
+</head>
+<body>
+<!--navbar-->
+<nav class="navbar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="DietX Logo">
+        <h1>DietX</h1>
+    </div>
+    <div class="navbar-links">
+        <a href="/welcome">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/contact">Contact Us</a>
+    </div>
+    <a href="/" class="login-button">Try AI</a>
+</nav>
+<div class="fatherContainer">
+<div id="upload-container">
+  <h2>Upload an Image of your Food</h2>
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" name="image" id="image-input" accept="image/*" required>
+    <button type="submit" id="upload-button">Upload</button>
+    <button type="button" id="camera-button">Open Camera</button>
+    <button type="button" id="capture-button" style="display: none;">Capture Photo</button>
+  </form>
+</div>
+<div id="image-container">
+  <img id="image-preview" src="" alt="">
+</div>
+<div id="output-container">
+  <h2>Classification Output</h2>
+  <pre id="output"></pre>
+</div>
+<div id="predicted-class"></div>
+<div id="video-container">
+  <video id="camera-stream" autoplay></video>
+</div>
+</div>
+<script>
+const uploadForm = document.getElementById('upload-form');
+const imageInput = document.getElementById('image-input');
+const imagePreview = document.getElementById('image-preview');
+const outputContainer = document.getElementById('output');
+const predictedClassContainer = document.getElementById('predicted-class');
+const cameraButton = document.getElementById('camera-button');
+const captureButton = document.getElementById('capture-button');
+const videoContainer = document.getElementById('video-container');
+const cameraStream = document.getElementById('camera-stream');
+let capturedImage = null; // Variable to store the captured image data
+
+// Function to handle file selection and display preview
+const handleFileSelect = () => {
+  const file = imageInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+    capturedImage = file; // Store the selected file
+  }
+};
+
+// Event listener for file input change
+imageInput.addEventListener('change', handleFileSelect);
+
+// Event listener for form submission
+uploadForm.addEventListener('submit', async (event) => {
+  event.preventDefault(); // Prevent default form submission behavior
+
+  if (!capturedImage) {
+    console.error('No image captured or selected.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('image', capturedImage); // Use the captured image data
+
+  try {
+    const response = await fetch('/upload?user_id={{ user_id }}', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await response.json();
+
+    // Display output and additional information on the webpage
+    outputContainer.innerHTML = data.output;
+    predictedClassContainer.textContent = 'Predicted Class: ' + data.predicted_class;
+
+    // Display total nutrients sum with break lines after every nutrient
+    let totalNutrientsHTML = '<div style="font-size: 18px;"><b>Total Nutrients Sum:</b><br>';
+    for (const nutrient in data.total_nutrients_sum) {
+      totalNutrientsHTML += nutrient + ': ' + data.total_nutrients_sum[nutrient] + '<br>';
+    }
+    totalNutrientsHTML += '</div>';
+    outputContainer.innerHTML += totalNutrientsHTML;
+
+    // Increase font size and make result value bold
+    outputContainer.innerHTML += '<div style="font-size: 18px;"><b>Result:</b> <span style="font-weight: bold;">' + data.result + '</span></div>';
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+</script>
+</body>
+</html>

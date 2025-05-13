@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionnaire</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 500px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"],
+    input[type="text"] {
+      margin-right: 5px;
+    }
+
+    input[type="text"] {
+      width: calc(50% - 5px); /* Adjusted width for better spacing */
+      padding: 8px;
+    }
+
+    button {
+      display: block;
+      margin: 20px auto; /* Added more space below the questions */
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Questionnaire</h2>
+    <form id="questionnaireForm" action="/submit_questionnaire?user_id={{ user_id }}" method="POST">
+      <div class="question" id="question1">
+        <p>1. Are you male or female?</p>
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label>
+      </div>
+      <div class="question" id="question2" style="display: none;">
+        <p>2. Please provide your height and weight:</p>
+        <input type="text" id="height" name="height" placeholder="Height (cm)">
+        <input type="text" id="weight" name="weight" placeholder="Weight (kg)">
+      </div>
+      <div class="question" id="question3" style="display: none;">
+        <p>3. What is your major medical condition(s)?</p>
+        <input type="checkbox" id="condition1" name="condition1" value="High Cholesterol (Hyperlipidemia)">
+        <label for="condition1">High Cholesterol (Hyperlipidemia)</label><br>
+        <input type="checkbox" id="condition2" name="condition2" value="Diabetes Mellitus Type 1">
+        <label for="condition2">Diabetes Mellitus Type 1</label><br>
+        <input type="checkbox" id="condition3" name="condition3" value="Diabetes Mellitus Type 2">
+        <label for="condition3">Diabetes Mellitus Type 2</label><br>
+        <input type="checkbox" id="condition4" name="condition4" value="Cardiovascular Disease">
+        <label for="condition4">Cardiovascular Disease</label><br>
+        <input type="checkbox" id="condition5" name="condition5" value="Kidney Disease">
+        <label for="condition5">Kidney Disease</label><br>
+        <input type="checkbox" id="condition6" name="condition6" value="Hypertension">
+        <label for="condition6">Hypertension</label><br>
+        <input type="checkbox" id="condition7" name="condition7" value="Obesity">
+        <label for="condition7">Obesity</label><br>
+        <input type="checkbox" id="condition8" name="condition8" value="Polycystic Ovary Syndrome (PCOS)">
+        <label for="condition8">Polycystic Ovary Syndrome (PCOS)</label><br>
+        <input type="checkbox" id="condition9" name="condition9" value="Gastroesophageal Reflux Disease (GERD)">
+        <label for="condition9">Gastroesophageal Reflux Disease (GERD)</label><br>
+        <input type="checkbox" id="condition10" name="condition10" value="Gout">
+        <label for="condition10">Gout</label>
+      </div>
+      <button id="nextBtn" onclick="nextQuestion(event)">Next</button>
+    </form>
+  </div>
+
+  <script>
+    let currentQuestion = 1;
+    const totalQuestions = 4; // Update the total number of questions here
+
+    function nextQuestion(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const current = document.getElementById(`question${currentQuestion}`);
+      const next = document.getElementById(`question${currentQuestion + 1}`);
+
+      if (current && next) {
+        const inputs = current.querySelectorAll('input[type="text"], input[type="radio"]:checked, input[type="checkbox"]:checked');
+        if (inputs.length === 0) {
+          alert('Please fill in the required information.');
+          return;
+        }
+
+        current.style.display = 'none';
+        next.style.display = 'block';
+        currentQuestion++;
+
+        if (currentQuestion === totalQuestions) {
+          // Submit the form when there are no more questions
+          document.getElementById('questionnaireForm').submit();
+        }
+      } else {
+        document.getElementById('questionnaireForm').submit();
+      }
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+.card {
+  display: block;
+  position: relative;
+  max-width: 300px;
+  max-height: 320px;
+  background-color: #f2f8f9;
+  border-radius: 10px;
+  padding: 2em 1.2em;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #c3e6ec, #a7d1d9);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.card:before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: linear-gradient(135deg, #364a60, #384c6c);
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.35s ease-out;
+}
+
+.card:hover:before {
+  transform: scale(28);
+}
+
+.card:hover .small-desc {
+  transition: all 0.5s ease-out;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card:hover .card-title {
+  transition: all 0.5s ease-out;
+  color: #ffffff;
+}
+
+.fatherContainer {
+    border-radius: 30px;
+    background: #e4d9ff;
+    box-shadow:  35px 35px 70px #41417a,
+             -35px -35px 70px #5959a4;
+    padding: 20px;
+    margin-top: 160px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.card {
+  display: block;
+  position: relative;
+  max-width: 6000px;
+  max-height: 6000px;
+  background-color: #f2f8f9;
+  border-radius: 10px;
+  padding: 1.2em;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #c3e6ec, #a7d1d9);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.card:before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: linear-gradient(135deg, #364a60, #384c6c);
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.35s ease-out;
+}
+
+.card:hover:before {
+  transform: scale(28);
+}
+
+.card:hover .small-desc {
+  transition: all 0.5s ease-out;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card:hover .card-title {
+  transition: all 0.5s ease-out;
+  color: #ffffff;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.navbar {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    border-radius: 20px;
+    width: 90%; /* Reduced width */
+    max-width: 1200px; /* Maximum width */
+    position: fixed;
+    top: 3rem; /* Margin from top */
+    left: 50%; /* Move the navbar to the center */
+    transform: translateX(-50%); /* Adjust to center the navbar */
+    z-index: 1000; /* Ensure the navbar stays on top */
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: center; /* Center the contents horizontally */
+    align-items: center;
+    width: 100%; /* Full width */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.logo h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.navbar-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-links a {
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    background-color: #eee;
+}
+
+.login-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000000; /* slight grey background */
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: row; /* Display cards horizontally */
+    flex-wrap: wrap; /* Allow cards to wrap to the next line if necessary */
+    justify-content: flex-start; /* Align cards to the start of the container */
+    gap: 30px; /* Add some space between cards */
+}
+
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="DietX Logo">
+            <h1>DietX</h1>
+        </div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/contact">Contact Us</a>
+        </div>
+        <a href="{{ url_for('tryAI', user_id=user_id) }}" class="login-button">Try AI</a>
+    </div>
+</nav>
+
+<div class="fatherContainer">
+<div class="container">
+
+  {% for nutrient in nutrients_data %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Nutrients Intake</h5>
+      <div class="ordered-list">
+        <ul>
+          <li>Intake ID: {{ nutrient.intake_id }}</li>
+          <li>Intake Date: {{ nutrient.intake_date }}</li>
+            <li>Dish: {{ nutrient.dish }}</li>
+          <li>Carbohydrates: {{ nutrient.carbohydrates }}</li>
+          <li>Added Sugars: {{ nutrient.added_sugars }}</li>
+          <li>Saturated Fats: {{ nutrient.saturated_fats }}</li>
+          <li>Trans Fats: {{ nutrient.trans_fats }}</li>
+          <li>Dietary Cholesterol: {{ nutrient.dietary_cholesterol }}</li>
+          <li>High Cholesterol Foods: {{ nutrient.high_cholesterol_foods }}</li>
+          <li>Unsaturated Fats: {{ nutrient.unsaturated_fats }}</li>
+          <li>Whole Grains: {{ nutrient.whole_grains }}</li>
+          <li>Lean Proteins: {{ nutrient.lean_proteins }}</li>
+          <li>Fiber: {{ nutrient.fiber }}</li>
+          <li>Sodium: {{ nutrient.sodium }}</li>
+          <li>Phosphorus: {{ nutrient.phosphorus }}</li>
+          <li>Potassium: {{ nutrient.potassium }}</li>
+          <li>Protein: {{ nutrient.protein }}</li>
+          <li>Alcohol: {{ nutrient.alcohol }}</li>
+          <li>Fructose: {{ nutrient.fructose }}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="go-corner">
+      <div class="go-arrow">→</div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+</div>
+</body>
+</html>
